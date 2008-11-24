@@ -22,9 +22,16 @@ class E
   end
 end
 
+class F < String
+  include X
+end
+
+
+
 def test_basics	
   c = C.new
   assert_equal("\x12\x34", c.test)  
+  assert_equal(String, c.test.class)
   assert_equal("\x34\x56", c.x3456)
   x = X::X.new("\xab")
   assert_equal("\xab", x)
@@ -75,6 +82,18 @@ def test_binary
 end
 
 def test_octal
+end
+
+def test_chaining
+  f = F.new # extends String
+  x = f.x23
+  assert(x.is_a? F)
+  x2 = f.x45.xab.b11111111
+  assert_equal(F, x2.class)
+
+  c = C.new
+  assert_equal("\x12\x34", c.test)  
+  assert_equal(String, c.test.class)
 end
 
 end

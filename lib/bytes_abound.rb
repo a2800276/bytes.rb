@@ -17,16 +17,16 @@ module X
 
 def method_missing m, *args
   if (args.length == 0) && (val = ::X._get_val(m))
-    if self.is_a? X::X
-      X.new(self + ( X.new(val) ))
+    if self.is_a? String
+      new_class = self.class # same as the old class
+      new_class.new(self + ( new_class.new(val) ))
       # consider: more cases, either the module gets included
       # for laziness as a quick string builder, or it itself
       # is an extension of String. In that case, .x2394242 
-      # shouldn't return an X::X, but a new instance of the
-      # class we were included into. Make a new marker?
+      # shouldn't return a String, but a new instance of 
+      # itself 
     else
-
-      X.new( X.new(val) )
+       String.new(val) 
     end
   else
     if respond_to? :__method_missing
@@ -55,7 +55,7 @@ class << self
   end
   
   # not sure if this is the right behaviour:
-  # if _get_val can handle the value because it doesn't consist
+  # if _get_val can handle thrb -e value because it doesn't consist
   # of the proper characters, e.g. xabcdefgh, it returns nil.
   # Otoh, if we determine that the value contains only valid chars, but
   # the parameter doesn't have the correct number of chars, e.g. `xabc`,
