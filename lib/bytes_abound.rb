@@ -1,4 +1,4 @@
-
+require 'lib/bitstring'
 
 # Including this method allows you magically create hex and binary
 # constants like `x2345` or `b0101_1111` out of thin air.  Being granted
@@ -79,12 +79,14 @@ class << self
 
 end
 
-
-  class X < String
+  class X < Bitstring
     include ::X 
   end # class
 
+
 end #module
+
+  
 
 #X::X.dingdong :a, :b, :c
 #X::X.dingdong 

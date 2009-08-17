@@ -133,6 +133,4 @@ def test_set_clear
   
 end
 
-
-
 end

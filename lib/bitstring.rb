@@ -1,6 +1,4 @@
-
 class Bitstring < String
-  
   # Bitwise AND
   def & other
     _go :&, other

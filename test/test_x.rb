@@ -96,4 +96,18 @@ def test_chaining
   assert_equal(String, c.test.class)
 end
 
+def test_bitstring
+  
+  x1 = X.xf0
+  x2 = X.x0f
+  x3 = x1 | x2
+  assert_equal "11111111", x3.bits
+  x4 = x3 & x2
+  assert_equal x2, x4
+  x5 = X.xf0f0f0
+  assert_equal "\x0f\x0f\x0f", ~x5
+
+  
+end
+
 end
