@@ -20,7 +20,8 @@ class Bitstring < String
     check(other)
     b = Bitstring.new
     0.upto(length-1) {|i|
-      b.concat(self[i].send(mes, other[i]))
+      #b.concat(self[i].send(mes, other[i]))
+      b.concat(_get_byte(i).send(mes, other._get_byte(i)))
     }
     b
   end
@@ -47,9 +48,9 @@ class Bitstring < String
     new_string = Bitstring.new("\x00"*length)
     carry = 0x00
     (length-1).downto(0) {|i|
-      new_b         = (self[i] << bits_to_shift)
-      new_string[i] = (new_b & 0xff)
-      new_string[i] = (new_string[i] | carry)
+      new_b         = (_get_byte(i) << bits_to_shift)
+      new_string._set_byte( i, new_b & 0xff )
+      new_string._set_byte( i, new_string._get_byte(i) | carry)
       carry         = (new_b >> 8) 
     }
 
@@ -72,9 +73,9 @@ class Bitstring < String
     carry = 0
 
     0.upto(length-1) {|i|
-      new_string.concat(self[i] >> bits_to_shift)
-      new_string[i] = new_string[i] | carry
-      carry = (self[i] & mask) << (8-bits_to_shift)
+      new_string.concat(_get_byte(i) >> bits_to_shift)
+      new_string._set_byte(i, new_string._get_byte(i) | carry)
+      carry = (_get_byte(i) & mask) << (8-bits_to_shift)
     }
     new_string.insert(0, "\x00" * bytes_to_shift)
     Bitstring.new(new_string[0, length])
@@ -102,19 +103,19 @@ class Bitstring < String
     return nil if byte > length-1
     mask = 0x80 >> (i%8)
     
-    (self[byte] & mask) == mask ? 1 : 0 
+    (_get_byte(byte) & mask) == mask ? 1 : 0 
   end
 
   def set i
     byte = _idx_raise(i)
     mask = 0x80 >> (i%8)
-    self[byte] |= mask 
+    _set_byte(byte, _get_byte(byte) | mask) 
   end
 
   def clear i
     byte = _idx_raise(i) 
     mask = ~(0x80 >> (i%8))
-    self[byte] &= mask
+    _set_byte(byte, _get_byte(byte) & mask)
   end
 
   # Which byte contains bit i?
@@ -130,6 +131,7 @@ class Bitstring < String
     end
     byte
   end
+
 
 #  def [] *args
 #    super unless args && args.length==1 && args[0].is_a?(Fixnum)
@@ -174,7 +176,7 @@ class Bitstring < String
     i = 0
     0.upto(length-1){|n|
       i <<= 8
-      i |=  self[n]
+      i |=  _get_byte(n)
     }
     return i
 
@@ -189,8 +191,27 @@ class Bitstring < String
   end
 
   def check other
-    raise "wrong class" unless other.is_a? String
+    raise "wrong class: #{other}" unless other.is_a? String
     raise "incorrect length" unless other.length == self.length
+  end
+
+  def _get_byte i
+    @@one_point_nine ||= (RUBY_VERSION.to_f > 1.8)
+    if @@one_point_nine
+      self.getbyte(i)
+    else
+      self[i]
+    end
+  end
+
+  def _set_byte i, val
+    @@one_point_nine ||= (RUBY_VERSION.to_f > 1.8)
+    if @@one_point_nine
+      self.setbyte(i,val)
+    else
+      self[i]=val
+    end
+
   end
 end
 
