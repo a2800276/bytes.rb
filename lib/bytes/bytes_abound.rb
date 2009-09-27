@@ -1,4 +1,3 @@
-require 'lib/bitstring'
 
 # Including this method allows you magically create hex and binary
 # constants like `x2345` or `b0101_1111` out of thin air.  Being granted
@@ -48,7 +47,7 @@ class << self
     # of the base id, e.g. .x31x32x33 is equivalent to .x313233
     # and .x31_32_33
     if (args.length == 0) && (val = _get_val(m))
-      X.new val
+      Bitstring.new val
     else
       super
     end
@@ -79,9 +78,9 @@ class << self
 
 end
 
-  class X < Bitstring
-    include ::X 
-  end # class
+  #class X < Bitstring
+  #  include ::X 
+  #end # class
 
 
 end #module

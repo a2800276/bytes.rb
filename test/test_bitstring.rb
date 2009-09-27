@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'bitstring'
+require 'bytes'
 
 class Test_Bitstring < Test::Unit::TestCase
 

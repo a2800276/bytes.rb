@@ -1,5 +1,5 @@
 require 'test/unit'
-require 'bytes_abound'
+require 'bytes'
 
 class Test_X < Test::Unit::TestCase
 
@@ -86,8 +86,10 @@ end
 
 def test_chaining
   f = F.new # extends String
-  x = f.x23
-  assert(x.is_a? F)
+  puts :here1
+  x = f.x32
+  puts :here2
+  assert(x.is_a?(F), "this one")
   x2 = f.x45.xab.b11111111
   assert_equal(F, x2.class)
 

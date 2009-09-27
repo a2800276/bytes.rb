@@ -1,5 +1,5 @@
 module X
-class X < String
+class X < Bitstring
 
 def x00
   X.new(self + self.class.x00)
